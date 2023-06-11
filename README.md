@@ -1,8 +1,8 @@
-# `flutter_reactive_value` library
+# The `flutter_reactive_value` library
 
 This library provides a mechanism for causing a UI to reactively update in response to changes in underlying values in your data model.
 
-This is the simplest possible state management / reactive UI update solution for Flutter by far, reducing boilerplate compared to all the insanely complex [state management approaches](https://docs.flutter.dev/development/data-and-backend/state-mgmt/options) in common use.
+This is the simplest possible state management / reactive UI update solution for Flutter, by far, reducing boilerplate compared to all the other insanely complex [state management approaches](https://docs.flutter.dev/development/data-and-backend/state-mgmt/options) currently available.
 
 ## Usage
 
@@ -21,7 +21,7 @@ dependencies:
 import 'package:flutter_reactive_value/flutter_reactive_value.dart'
 ```
 
-(3) Use the standard Flutter `ValueNotifier<T>` mechanism to declare any values you want your UI to listen for changes to (probably host these inside the `State` object of the appropriate `StatefulWidget`):
+(3) Use the standard Flutter [`ValueNotifier<T>`](https://api.flutter.dev/flutter/foundation/ValueNotifier-class.html) mechanism to declare any values you want your UI to listen for changes to (probably host these inside the `State` object of the appropriate `StatefulWidget`):
 
 ```dart
 final counter = ValueNotifier(0);
@@ -30,10 +30,31 @@ final counter = ValueNotifier(0);
 (4) Build your UI the standard way, using a `Widget` hierarchy, and anywhere you want to use the value and respond to future changes in the value by updating the UI, instead of using the `ValueNotifier.value` getter method, use `ValueNotifier.reactiveValue(BuildContext)`:
 
 ```dart
-Text('The current count is ${counter.reactiveValue(context)}')
+class HomeView extends StatelessWidget {
+  const HomeView({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Text(
+          'The count is: ${counter.reactiveValue(context)}',
+          style: const TextStyle(fontSize: 20),
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          counter.value++;
+        },
+        tooltip: 'Increment',
+        child: const Icon(Icons.plus_one_outlined),
+      ),
+    );
+  }
+}
 ```
 
-Now when `counter.value` changes, the enclosing widget will be scheduled for rebuilding.
+Now whenever `counter.value` changes (here using `counter.value++` in the `onPressed` handler), the enclosing widget (here `HomeView`) will be scheduled for rebuilding.
 
 (The only place you're not allowed to update `counter.value` is the `build` method of a widget, since state changes are disallowed in `build` methods.)
 
