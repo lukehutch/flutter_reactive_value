@@ -38,12 +38,14 @@ class HomeView extends StatelessWidget {
     return Scaffold(
       body: Center(
         child: Text(
+          // Read value, and subscribe to changes:
           'The count is: ${counter.reactiveValue(context)}',
           style: const TextStyle(fontSize: 20),
         ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
+          // Update value:
           counter.value++;
         },
         tooltip: 'Increment',
