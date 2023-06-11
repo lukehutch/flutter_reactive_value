@@ -21,7 +21,7 @@ dependencies:
 import 'package:flutter_reactive_value/flutter_reactive_value.dart'
 ```
 
-(3) Use the standard Flutter [`ValueNotifier<T>`](https://api.flutter.dev/flutter/foundation/ValueNotifier-class.html) mechanism to declare any values you want your UI to listen for changes to (probably host these inside the `State` object of the appropriate `StatefulWidget`):
+(3) Use the standard Flutter [`ValueNotifier<T>`](https://api.flutter.dev/flutter/foundation/ValueNotifier-class.html) mechanism to declare any values you want your UI to listen for changes to:
 
 ```dart
 final counter = ValueNotifier(0);
