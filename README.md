@@ -80,6 +80,10 @@ void addOrRemoveTag(String tag, bool add) {
 
 The `flutter_reactive_value` mechanism is extremely simple. [See the code here.](https://github.com/lukehutch/flutter_reactive_value/blob/main/lib/src/reactive_value_notifier.dart)
 
+## Pro-tip
+
+Use `flutter_reactive_value` together with my other library, [`flutter_persistent_value_notifier`](https://github.com/lukehutch/flutter_persistent_value_notifier), to enable persistent reactive state in your app!
+
 ## Author
 
 `flutter_reactive_value` was written by Luke Hutchison, and is released under the MIT license.
