@@ -62,6 +62,20 @@ Now whenever `counter.value` changes (here using `counter.value++` in the `onPre
 
 That's all there is to it!
 
+## Notifying listeners of deeper changes
+
+If you try to wrap a collection or object in a `ValueNotifier`, e.g. to track a set of values using `ValueNotifier<Set<T>>`, then modifying fields, or adding or removing values from the collection or object will not notify the listeners of the `ValueNotifier` that the value has changed (because the value itself has not changed). In this case you can call the extension method `notifyChanged()` to manually call the listeners. For example:
+
+```dart
+final tags = ValueNotifier(<String>{});
+
+void addOrRemoveTag(String tag, bool add) {
+  if ((add && tags.value.add(tag)) || (!add && tags.value.remove(tag))) {
+    tags.notifyChanged();
+  }
+}
+```
+
 ## The code
 
 The `flutter_reactive_value` mechanism is extremely simple. [See the code here.](https://github.com/lukehutch/flutter_reactive_value/blob/main/lib/src/reactive_value_notifier.dart)
