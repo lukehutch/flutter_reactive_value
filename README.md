@@ -56,11 +56,37 @@ class HomeView extends StatelessWidget {
 }
 ```
 
-Now whenever `counter.value` changes (here using `counter.value++` in the `onPressed` handler), the enclosing widget (here `HomeView`) will be scheduled for rebuilding.
+Now whenever `counter.value` changes (here using `counter.value++` in the `onPressed` handler), the enclosing widget (here `HomeView`), from which the `BuildContext` was obtained, will be scheduled for rebuilding.
 
 (The only place you're not allowed to update `counter.value` is the `build` method of a widget, since state changes are disallowed in `build` methods.)
 
-That's all there is to it!
+That's all there is to it, at least for simple usage!
+
+## Optimizing UI updates
+
+If you have a deep nested tree of `Widget` constructor calls within a single `StatelessWidget` or `StatefulWidget`, then you probably don't want to rebuild the whole `Widget` subtree each time only one value changes. You can limit the region that is updated by using `Builder` to introduce a new `BuildContext` right above the `reactiveValue(context)` call.
+
+Before:
+
+```dart
+// ...
+Container(
+  child: Text('${counter.reactveValue(context)}'),
+),
+// ...
+```
+
+After:
+
+```dart
+// ...
+Container(
+  child: Builder(
+    builder: (subContext) => Text('${counter.reactveValue(subContext)}'),
+  ),
+),
+// ...
+```
 
 ## Notifying listeners of deeper changes
 
@@ -80,7 +106,7 @@ void addOrRemoveTag(String tag, bool add) {
 
 The `flutter_reactive_value` mechanism is extremely simple. [See the code here.](https://github.com/lukehutch/flutter_reactive_value/blob/main/lib/src/reactive_value_notifier.dart)
 
-## Pro-tip
+## Pro-tip: adding persistence
 
 Use `flutter_reactive_value` together with my other library, [`flutter_persistent_value_notifier`](https://github.com/lukehutch/flutter_persistent_value_notifier), to enable persistent reactive state in your app!
 
