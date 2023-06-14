@@ -25,9 +25,12 @@ extension ReactiveValueNotifier<T> on ValueNotifier<T> {
           'to schedule the value to update after `build` has completed, use '
           '`SchedulerBinding.instance.scheduleTask(updateTask, Priority.idle)` '
           'or similar.');
-      // If the element has not been garbage collected, mark the element
-      // as needing to be rebuilt
-      elementRef.target?.markNeedsBuild();
+      // If the element has not been garbage collected (causing
+      // `elementRef.target` to be null), or unmounted
+      if (elementRef.target?.mounted ?? false) {
+        // Mark the element as needing to be rebuilt
+        elementRef.target!.markNeedsBuild();
+      }
       // Remove the listener -- only listen to one change per `build`
       removeListener(listenerWrapper.listener!);
     };
