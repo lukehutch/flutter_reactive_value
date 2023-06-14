@@ -1,3 +1,7 @@
+### 1.0.3
+
+Update docs only (so that pub.dev is updated).
+
 ### 1.0.2
 
 Check if `mounted` before calling `markNeedsBuild()`
