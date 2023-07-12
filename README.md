@@ -4,6 +4,8 @@ This library provides a mechanism for causing a UI to reactively update in respo
 
 This is the simplest possible state management / reactive UI update solution for Flutter, by far, reducing boilerplate compared to all the other insanely complex [state management approaches](https://docs.flutter.dev/development/data-and-backend/state-mgmt/options) currently available.
 
+The closest thing to `flutter_reactive_value` is [`ValueListenableBuilder`](https://api.flutter.dev/flutter/widgets/ValueListenableBuilder-class.html). `flutter_reactive_value` provides the same basic capabilities as `ValueListenableBuilder`, but with much less syntactic overhead (i.e. you could think of `flutter_reactive_value` as syntactic sugar). `ValueListenableBuilder` may work better if your reactive widget has a child element that is complex and non-reactive.
+
 ## Usage
 
 (1) Add a dependency upon `flutter_reactive_value` in your `pubspec.yaml` (replace `any` with the latest version, if you want to control the version), then run `flutter pub get`:
@@ -102,13 +104,13 @@ void addOrRemoveTag(String tag, bool add) {
 }
 ```
 
-## The code
-
-The `flutter_reactive_value` mechanism is extremely simple. [See the code here.](https://github.com/lukehutch/flutter_reactive_value/blob/main/lib/src/reactive_value_notifier.dart)
-
 ## Pro-tip: adding persistence
 
 Use `flutter_reactive_value` together with my other library, [`flutter_persistent_value_notifier`](https://github.com/lukehutch/flutter_persistent_value_notifier), to enable persistent reactive state in your app!
+
+## The code
+
+The `flutter_reactive_value` mechanism is extremely simple. [See the code here.](https://github.com/lukehutch/flutter_reactive_value/blob/main/lib/src/reactive_value_notifier.dart)
 
 ## Author
 
