@@ -1,3 +1,7 @@
+### 1.0.4
+
+Specify correct minimum Dart and Flutter versions (fixes #2).
+
 ### 1.0.3
 
 Update docs only (so that pub.dev is updated).
