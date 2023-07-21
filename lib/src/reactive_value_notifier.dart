@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
-class _ListenerWrapper<T> {
+// Can't refer to listener while it is being declared, so we need this class
+// to add a layer of indirection.
+class _ListenerWrapper {
   void Function()? listener;
 }
 
@@ -13,17 +15,16 @@ extension ReactiveValueNotifier<T> on ValueNotifier<T> {
   /// value.
   T reactiveValue(BuildContext context) {
     final elementRef = WeakReference(context as Element);
-    // Can't refer to listener while it is being declared, so need to add
-    // a layer of indirection.
-    final listenerWrapper = _ListenerWrapper<void Function()>();
+    final listenerWrapper = _ListenerWrapper();
     listenerWrapper.listener = () {
       assert(
           SchedulerBinding.instance.schedulerPhase !=
               SchedulerPhase.persistentCallbacks,
           'Do not mutate state (by setting the value of the ValueNotifier '
           'that you are subscribed to) during a `build` method. If you need '
-          'to schedule the value to update after `build` has completed, use '
-          '`SchedulerBinding.instance.scheduleTask(updateTask, Priority.idle)` '
+          'to schedule a value update after `build` has completed, use '
+          '`SchedulerBinding.instance.scheduleTask(updateTask, Priority.idle)`, '
+          '`SchedulerBinding.addPostFrameCallback(updateTask)`, '
           'or similar.');
       // If the element has not been garbage collected (causing
       // `elementRef.target` to be null), or unmounted
