@@ -62,6 +62,8 @@ Now whenever `counter.value` changes (here using `counter.value++` in the `onPre
 
 (The only place you're not allowed to update `counter.value` is the `build` method of a widget, since state changes are disallowed in `build` methods.)
 
+There is no need to dispose the `ValueNotifier` listener -- it is automatically removed whenever the value changes (and it is added back whenever the `build` method is called, during a rebuild).
+
 That's all there is to it, at least for simple usage!
 
 ## Optimizing UI updates
