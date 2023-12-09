@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
+final Set<String> _subscribers = {};
+
 // Can't refer to listener while it is being declared, so we need this class
 // to add a layer of indirection.
 class _ListenerWrapper {
@@ -14,6 +16,15 @@ extension ReactiveValueNotifier<T> on ValueNotifier<T> {
   /// that is currently being built (the [context]) to any changes in the
   /// value.
   T reactiveValue(BuildContext context) {
+    final key = '$hashCode${context.hashCode}';
+
+    if (_subscribers.contains(key)) {
+      // there is already a listener for this value that hasn't executed yet
+      return value;
+    }
+
+    _subscribers.add(key);
+
     final elementRef = WeakReference(context as Element);
     final listenerWrapper = _ListenerWrapper();
     listenerWrapper.listener = () {
@@ -26,6 +37,9 @@ extension ReactiveValueNotifier<T> on ValueNotifier<T> {
           '`SchedulerBinding.instance.scheduleTask(updateTask, Priority.idle)`, '
           '`SchedulerBinding.addPostFrameCallback(updateTask)`, '
           'or similar.');
+
+      _subscribers.remove(key);
+
       // If the element has not been garbage collected (causing
       // `elementRef.target` to be null), or unmounted
       if (elementRef.target?.mounted ?? false) {
