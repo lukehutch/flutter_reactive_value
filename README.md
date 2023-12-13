@@ -106,9 +106,9 @@ void addOrRemoveTag(String tag, bool add) {
 }
 ```
 
-## Pro-tip: adding persistence
+## Pro-tip: persistence
 
-Use `flutter_reactive_value` together with my other library, [`flutter_persistent_value_notifier`](https://github.com/lukehutch/flutter_persistent_value_notifier), to enable persistent reactive state in your app!
+See my other library, [`flutter_persistent_value_notifier`](https://github.com/lukehutch/flutter_persistent_value_notifier), to enable persistent state in your app!
 
 ## Author
 
