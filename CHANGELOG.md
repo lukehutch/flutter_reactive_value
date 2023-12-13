@@ -1,3 +1,7 @@
+### 2.0.0
+
+Fix memory leak (listeners were being added with every build). This required converting `ReactiveValueNotifier` from an extension to a subclass, because it needed an extra private field. (#5)
+
 ### 1.0.4
 
 Specify correct minimum Dart and Flutter versions (fixes #2).

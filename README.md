@@ -4,7 +4,7 @@ This library provides a mechanism for causing a UI to reactively update in respo
 
 This is the simplest possible state management / reactive UI update solution for Flutter, by far, reducing boilerplate compared to all the other insanely complex [state management approaches](https://docs.flutter.dev/development/data-and-backend/state-mgmt/options) currently available.
 
-The closest thing to `flutter_reactive_value` is [`ValueListenableBuilder`](https://api.flutter.dev/flutter/widgets/ValueListenableBuilder-class.html). `flutter_reactive_value` provides the same basic capabilities as `ValueListenableBuilder`, but with much less syntactic overhead (i.e. you could think of `flutter_reactive_value` as syntactic sugar). `ValueListenableBuilder` may work better if your reactive widget has a child element that is complex and non-reactive.
+The closest thing to `flutter_reactive_value` is [`ValueListenableBuilder`](https://api.flutter.dev/flutter/widgets/ValueListenableBuilder-class.html). `flutter_reactive_value` provides the same basic capabilities as `ValueListenableBuilder`, but with much less syntactic overhead (i.e. you could think of `flutter_reactive_value` as syntactic sugar). `ValueListenableBuilder` may work better if your reactive widget has a child element that is complex and non-reactive, because it takes a `child` parameter for any child widget that is not affected by changes to the `ValueNotifier`'s value.
 
 ## Usage
 
@@ -23,13 +23,13 @@ dependencies:
 import 'package:flutter_reactive_value/flutter_reactive_value.dart'
 ```
 
-(3) Use the standard Flutter [`ValueNotifier<T>`](https://api.flutter.dev/flutter/foundation/ValueNotifier-class.html) mechanism to declare any values you want your UI to listen for changes to:
+(3) Use `ReactiveValueNotifier<T>` rather than the standard Flutter [`ValueNotifier<T>`](https://api.flutter.dev/flutter/foundation/ValueNotifier-class.html) to declare any values you want your UI to listen for changes to:
 
 ```dart
-final counter = ValueNotifier(0);
+final counter = ReactiveValueNotifier(0);
 ```
 
-(4) Build your UI the standard way, using a `Widget` hierarchy, and anywhere you want to use the value and respond to future changes in the value by updating the UI, instead of using the `ValueNotifier.value` getter method, use `ValueNotifier.reactiveValue(BuildContext)`:
+(4) Build your UI the standard way, using a `Widget` hierarchy, and anywhere you want to use the value and respond to future changes in the value by updating the UI, instead of using the usual `ValueNotifier.value` getter method, use `ReactiveValueNotifier.reactiveValue(BuildContext)`:
 
 ```dart
 class HomeView extends StatelessWidget {
@@ -97,7 +97,7 @@ Container(
 If you try to wrap a collection or object in a `ValueNotifier`, e.g. to track a set of values using `ValueNotifier<Set<T>>`, then modifying fields, or adding or removing values from the collection or object will not notify the listeners of the `ValueNotifier` that the value has changed (because the value itself has not changed). In this case you can call the extension method `notifyChanged()` to manually call the listeners. For example:
 
 ```dart
-final tags = ValueNotifier(<String>{});
+final tags = ReactiveValueNotifier(<String>{});
 
 void addOrRemoveTag(String tag, bool add) {
   if ((add && tags.value.add(tag)) || (!add && tags.value.remove(tag))) {
@@ -109,10 +109,6 @@ void addOrRemoveTag(String tag, bool add) {
 ## Pro-tip: adding persistence
 
 Use `flutter_reactive_value` together with my other library, [`flutter_persistent_value_notifier`](https://github.com/lukehutch/flutter_persistent_value_notifier), to enable persistent reactive state in your app!
-
-## The code
-
-The `flutter_reactive_value` mechanism is extremely simple. [See the code here.](https://github.com/lukehutch/flutter_reactive_value/blob/main/lib/src/reactive_value_notifier.dart)
 
 ## Author
 

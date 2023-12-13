@@ -9,33 +9,60 @@ class _ListenerWrapper {
 
 /// Extend [ValueNotifier] so that [Element] objects in the build tree can
 /// respond to changes in the value.
-extension ReactiveValueNotifier<T> on ValueNotifier<T> {
+class ReactiveValueNotifier<T> extends ValueNotifier<T> {
+  ReactiveValueNotifier(super.value);
+
+  /// An Expando mapping from `Element` objects to `true`, if the `Element`
+  ///  is subscribed to this `ValueNotifier`.
+  final _subscribedElements = Expando<bool>();
+
   /// Fetch the [value] of this [ValueNotifier], and subscribe the element
   /// that is currently being built (the [context]) to any changes in the
   /// value.
   T reactiveValue(BuildContext context) {
-    final elementRef = WeakReference(context as Element);
+    final element = context as Element;
+    // If element is already subscribed, return the current value without
+    // subscribing again
+    if (_subscribedElements[element] == true) {
+      return value;
+    }
+    // Add a weak reference to the element to the Expando of subscribed
+    // elements
+    _subscribedElements[element] = true;
+
+    // Create a weak reference to the element
+    final elementRef = WeakReference(element);
+
     final listenerWrapper = _ListenerWrapper();
     listenerWrapper.listener = () {
+      // State is not supposed to be mutated during `build`
       assert(
           SchedulerBinding.instance.schedulerPhase !=
               SchedulerPhase.persistentCallbacks,
           'Do not mutate state (by setting the value of the ValueNotifier '
           'that you are subscribed to) during a `build` method. If you need '
           'to schedule a value update after `build` has completed, use '
-          '`SchedulerBinding.instance.scheduleTask(updateTask, Priority.idle)`, '
-          '`SchedulerBinding.addPostFrameCallback(updateTask)`, '
+          'SchedulerBinding.instance.scheduleTask(updateTask, Priority.idle), '
+          'SchedulerBinding.addPostFrameCallback(updateTask), '
           'or similar.');
       // If the element has not been garbage collected (causing
       // `elementRef.target` to be null), or unmounted
-      if (elementRef.target?.mounted ?? false) {
-        // Mark the element as needing to be rebuilt
-        elementRef.target!.markNeedsBuild();
+      final elementRefTarget = elementRef.target;
+      if (elementRefTarget != null) {
+        if (elementRefTarget.mounted) {
+          // Then mark the element as needing to be rebuilt
+          elementRefTarget.markNeedsBuild();
+        }
+        // Remove the element from the Expando of subscribed elements
+        _subscribedElements[elementRefTarget] = null;
       }
-      // Remove the listener -- only listen to one change per `build`
+      // Remove the listener -- only listen to one change per build
+      // (each subsequent build will resubscribe)
       removeListener(listenerWrapper.listener!);
     };
+    // Listen to changes to the ReactiveValue
     addListener(listenerWrapper.listener!);
+    // Return the current value
     return value;
   }
 

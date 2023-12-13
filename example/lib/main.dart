@@ -1,5 +1,5 @@
-import 'package:flutter_reactive_value/flutter_reactive_value.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_reactive_value/flutter_reactive_value.dart';
 
 void main() async {
   runApp(
@@ -10,7 +10,7 @@ void main() async {
   );
 }
 
-final counter = ValueNotifier<int>(0);
+final counter = ReactiveValueNotifier<int>(0);
 
 class HomeView extends StatelessWidget {
   const HomeView({Key? key}) : super(key: key);
