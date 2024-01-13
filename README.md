@@ -75,7 +75,7 @@ Before:
 ```dart
 // ...
 Container(
-  child: Text('${counter.reactveValue(context)}'),
+  child: Text('${counter.reactiveValue(context)}'),
 ),
 // ...
 ```
@@ -86,7 +86,7 @@ After:
 // ...
 Container(
   child: Builder(
-    builder: (subContext) => Text('${counter.reactveValue(subContext)}'),
+    builder: (subContext) => Text('${counter.reactiveValue()}'),
   ),
 ),
 // ...
