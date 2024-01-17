@@ -86,7 +86,7 @@ After:
 // ...
 Container(
   child: Builder(
-    builder: (subContext) => Text('${counter.reactiveValue()}'),
+    builder: (subContext) => Text('${counter.reactiveValue(subContext)}'),
   ),
 ),
 // ...
